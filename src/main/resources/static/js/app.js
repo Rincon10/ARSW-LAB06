@@ -8,14 +8,26 @@ var app = ( function(){
     var _totalPointsLabel = $('#totalPoints');
     var _bluePrintsAuthor = $('#bluePrintsAuthor');
     var _currentBlueprint= $('#currentBluePrint');
+    var _canvas = $('#canvas')[0], _context = _canvas.getContext("2d");
 
-    loadEventListeners();
     function loadEventListeners(){
         if( !_buttonBlueprints ){
             console.log('No lo encontre');
             return;
         }
-        _buttonBlueprints.addEventListener('click', getBlueprints);
+        else{
+            _buttonBlueprints.addEventListener('click', getBlueprints);
+        }
+
+        if (window.PointerEvent){
+            _canvas.addEventListener("pointerdown", function(event){
+                alert('pointerdown at ' + event.pageX+ ', ' + event.pageY);
+            });
+        }else{
+            CanvasGradient.addEventListener("mousedown", function(event){
+                alert('mousedown at '+event.clientX+ ', ' + event.clientY);
+            });
+        }
     }
 
     function  updateData( totalOfPoints ){
@@ -37,12 +49,11 @@ var app = ( function(){
         console.log(_listOfBlueprints,'1');
     }
 
-    function getBlueprints(event){
-        readInputData(null);
+    function getBlueprints( event ){
+        readInputData( null );
     }
 
-
-    function readInputData(bluePrintName){
+    function readInputData( bluePrintName ){
         //Limpiamos los datos existentes
         _listOfBlueprints=[];
         _inputNombre = $('#inputNombre').val();
@@ -55,29 +66,25 @@ var app = ( function(){
         bluePrintsHTML(_totalOfPoints);
     }
 
-    function draw( bluePrintName){
+    function draw( bluePrintName ){
         //Actualizamos el blueprint seleccionado
-        _currentBlueprint.text(`Current Blueprint: ${bluePrintName}`);
+        _currentBlueprint.text(`Current blueprint: ${bluePrintName}`);
 
         _module.getBlueprintsByNameAndAuthor(bluePrintName, _inputNombre, (error , mockDataAuthor)=>{
             if(error) return;
-            var _canvas = $('#canvas')[0];
             const { points } = mockDataAuthor[0];
             if( _canvas.getContext ){
-                const context = _canvas.getContext('2d');
                 //context.clearRect(0, 0, canvas.width, canvas.height);
                 //Limpiando canvas
-                canvas.width=canvas.width;
-                context.moveTo(points[0].x, points[0].y);
+                _canvas.width = _canvas.width;
+                _context.moveTo(points[0].x, points[0].y);
                 points.forEach( point=>{
                     const {x,y} = point;
-                    context.lineTo(x,y);
+                    _context.lineTo(x,y);
                 });
-                context.stroke();
+                _context.stroke();
             }
         });
-
-
     }
 
     function bluePrintsHTML(totalOfPoints){
@@ -103,6 +110,12 @@ var app = ( function(){
     }
 
     return {
+        init:function(){
+            console.info('Inicializando eventos.');
+            loadEventListeners();
+            console.info('Inicialización terminada....................................')
+        },
+
         updateAuthorName : newName => {
             updateName(newName);
         },
