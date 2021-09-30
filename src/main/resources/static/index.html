@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Blueprints</title>
+    <!-- Metadato para volver la pagina responsive -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- Scripts -->
+    <script src="/webjars/jquery/3.1.0/jquery.min.js"></script>
+    <script src="/webjars/bootstrap/4.1.2/js/bootstrap.min.js"></script>
+
+    <!-- CSS Styles -->
+    <link rel="stylesheet" href="/webjars/bootstrap/4.1.2/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="css/index.css" />
+
+
+</head>
+<body>
+    <center>
+        <h1>Blueprints</h1>
+    </center>
+    <br>
+    <br>
+    <main id="flex-container">
+        <section id="authorInfo">
+        
+            <div>
+                <label id="author">Author</label>
+                <div style="display: flex;">
+                    <input id="inputNombre" class="form-control" type="text" placeholder="author">
+                    <button id="buttonBlueprints" class="btn btn-dark"> Get Blueprints</button>
+                </div>
+            </div>
+            <h2 id="bluePrintsAuthor"> blueprints:</h2>
+            <div id="blueprintsInfo">
+                <table id="blueprintsTable" class="table table-dark" border="1px;">
+                    <thead >
+                        <tr>
+                            <th>Blueprint name</th>
+                            <th>Number points</th>
+                            <th>Open</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    </tbody>
+                </table>
+                <label id="totalPoints">Total Points:</label>
+            </div>
+        </section>
+        <section id="blueprintInfo">
+            <div>
+                <h2 id="currentBluePrint">Current Blueprint:</h2>
+                <canvas id="canvas" width="800" height="700"></canvas>
+            </div>
+        </section>
+    </main>
+    <!-- Scripts -->
+    <script src="js/apimock.js"></script>
+    <script src="js/apiclient.js"></script>
+    <script src="js/app.js"></script>
+</body>
+</html>
