@@ -1,18 +1,21 @@
-const module_canvas = (( )=>{
+var module_canvas = (( )=>{
+    //========================Var========================
+    var _cBlueprint;
+    var _lBlueprint;
+    var _points = [];
+    //========================Elements========================
     var _canvas = $('#canvas')[0]
     var _context = _canvas.getContext("2d");
-    var _points = [];
-    var _currentBlueprint;
-    var _lastBlueprint;
-        
-    function loadEventListeners() {
-        
+    
+
+    function loadEventListeners() {  
         if (window.PointerEvent){
             _canvas.addEventListener("pointerdown", ( event ) => {
-                _currentBlueprint = app.getCurrentBlueprint();
-                if( !_currentBlueprint ) return;  
-                if ( _currentBlueprint !== _lastBlueprint) _points = [];
-                _lastBlueprint = _currentBlueprint; 
+                _cBlueprint = app.getCurrentBlueprint();
+                if( !_cBlueprint ) return;  
+                if( _cBlueprint !== _lBlueprint) _points = [];
+                _lBlueprint = _cBlueprint;
+
                 var { pageX, pageY } = event;
                 pageX-= _canvas.offsetLeft;
                 pageY-= _canvas.offsetTop;
@@ -21,9 +24,8 @@ const module_canvas = (( )=>{
                     x: pageX,
                     y: pageY
                 }
-                
                 _points.push( point );
-                app.drawBlueprint( _currentBlueprint, _points );
+                app.drawBlueprint( _cBlueprint, _points );
             } );
         }else{
             CanvasGradient.addEventListener("mousedown", function(event){
@@ -31,10 +33,23 @@ const module_canvas = (( )=>{
             });
         }
     }
-
     return {
         init : ()=>{
             loadEventListeners();
+        },
+        drawCanvas : (currentPoints) =>{
+            const points = [ ...currentPoints, ..._points];
+            if( _canvas.getContext ){
+                //Limpiando canvas
+                _canvas.width = _canvas.width;
+
+                _context.moveTo(points[0].x, points[0].y);
+                points.forEach( point=>{
+                    const {x,y} = point;
+                    _context.lineTo(x,y);
+                });
+                _context.stroke();
+            }
         },
         updatePoints : () =>{
             if( _points.length !==0){
@@ -42,9 +57,12 @@ const module_canvas = (( )=>{
                 _points = [];
             }
         },
+        clear : ()=>{
+            _points = [];
+        },
         deletePoints : () =>{
             _points = [];
-            app.drawBlueprint( _currentBlueprint);
+            app.drawBlueprint( _cBlueprint);
         }
 
     }

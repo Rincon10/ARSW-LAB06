@@ -16,7 +16,7 @@
 
 
 </head>
-<body onLoad="app.init()">
+<body >
     <center>
         <h1>Blueprints</h1>
     </center>
@@ -33,7 +33,7 @@
                     <button id="buttonCreateNewBlueprint" class="btn btn-warning"> Create new bluePrint</button>
                 </div>
             </div>
-            <h2 id="bluePrintsAuthor"> blueprints:</h2>
+            <h2 id="bluePrintsAuthorH2"> blueprints:</h2>
             <div id="blueprintsInfo">
                 <table id="blueprintsTable" class="table table-dark" border="1px;">
                     <thead >
@@ -46,12 +46,12 @@
                     <tbody>
                     </tbody>
                 </table>
-                <label id="totalPoints">Total Points:</label>
+                <label id="totalPointsLabel">Total Points:</label>
             </div>
         </section>
         <section id="blueprintInfo">
             <div>
-                <h2 id="currentBluePrint">Current Blueprint:</h2>
+                <h2 id="currentBluePrintH2">Current Blueprint:</h2>
                 <canvas id="canvas" width="800" height="700"></canvas>
             </div>
             <div style="display: flex;">
