@@ -31,16 +31,13 @@ var app = ( function(){
         readInputData( null );
     }
     
-    function readInputData( bluePrintName ){
+    async function readInputData( bluePrintName ){
         //Limpiamos los datos existentes
         _listOfBlueprints=[];
         _inputNombre = $('#inputNombre').val();
         //Buscamos los blueprints segun el dato ingresado
-        if (bluePrintName === null) _module.getBlueprintsByAuthor( _inputNombre, callB);
-        else _module.getBlueprintsByNameAndAuthor(bluePrintName, _inputNombre, callB);
-        _totalOfPoints = _listOfBlueprints.reduce( (total, {numberOfPoints}) => total + numberOfPoints, 0);
-        //Lo pasamos a html
-        bluePrintsHTML(_totalOfPoints);
+        if (bluePrintName === null) await _module.getBlueprintsByAuthor( _inputNombre, callB);
+        else await _module.getBlueprintsByNameAndAuthor(bluePrintName, _inputNombre, callB);
     }
     
     function callB (error , mockDataAuthor) {
@@ -53,6 +50,9 @@ var app = ( function(){
             //_totalOfPoints+=data.numberOfPoints;
             return data;
         });
+        _totalOfPoints = _listOfBlueprints.reduce( (total, {numberOfPoints}) => total + numberOfPoints, 0);
+        //Lo pasamos a html
+        bluePrintsHTML(_totalOfPoints);
     }
     
     function bluePrintsHTML(totalOfPoints){

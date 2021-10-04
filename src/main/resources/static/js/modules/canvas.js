@@ -14,9 +14,9 @@ var module_canvas = (( )=>{
                 _cBlueprint = app.getCurrentBlueprint();
                 if( !_cBlueprint ) return;  
                 if( _cBlueprint !== _lBlueprint) _points = [];
-                _lBlueprint = _cBlueprint;
-
+                
                 var { pageX, pageY } = event;
+                _lBlueprint = _cBlueprint;
                 pageX-= _canvas.offsetLeft;
                 pageY-= _canvas.offsetTop;
 
@@ -25,7 +25,7 @@ var module_canvas = (( )=>{
                     y: pageY
                 }
                 _points.push( point );
-                app.drawBlueprint( _cBlueprint, _points );
+                app.drawBlueprint( _cBlueprint );
             } );
         }else{
             CanvasGradient.addEventListener("mousedown", function(event){
@@ -37,9 +37,12 @@ var module_canvas = (( )=>{
         init : ()=>{
             loadEventListeners();
         },
-        drawCanvas : (currentPoints) =>{
-            const points = [ ...currentPoints, ..._points];
-            if( _canvas.getContext ){
+        drawCanvas : (currentPoints = []) =>{    
+            if( _canvas.getContext ){        
+                _cBlueprint = app.getCurrentBlueprint();
+                if( _cBlueprint !== _lBlueprint) _points = [];
+
+                const points = [ ...currentPoints, ..._points];
                 //Limpiando canvas
                 _canvas.width = _canvas.width;
 
