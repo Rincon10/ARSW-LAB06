@@ -5,29 +5,27 @@ var app = ( function(){
     var _inputNombre;
     var _table = $('#blueprintsTable tbody');
     var _buttonBlueprints = document.getElementById('buttonBlueprints');
+    var _buttonUpdatePoints = document.getElementById('buttonUpdatePoints');
+    var _buttonUpdateDelete = document.getElementById('buttonUpdateDelete');
     var _totalPointsLabel = $('#totalPoints');
     var _bluePrintsAuthor = $('#bluePrintsAuthor');
     var _currentBlueprint= $('#currentBluePrint');
-    var _canvas = $('#canvas')[0], _context = _canvas.getContext("2d");
+    var _canvas = $('#canvas')[0]
+    var _context = _canvas.getContext("2d");
+    var _cBlueprint='';
 
     function loadEventListeners(){
         if( !_buttonBlueprints ){
             console.log('No lo encontre');
             return;
         }
-        else{
-            _buttonBlueprints.addEventListener('click', getBlueprints);
-        }
+        
+        _buttonBlueprints.addEventListener('click', getBlueprints);
+        module_canvas.init();
+        _buttonUpdatePoints.addEventListener('click', module_canvas.updatePoints);
+        _buttonUpdateDelete.addEventListener('click', module_canvas.deletePoints);
+        
 
-        if (window.PointerEvent){
-            _canvas.addEventListener("pointerdown", function(event){
-                alert('pointerdown at ' + event.pageX+ ', ' + event.pageY);
-            });
-        }else{
-            CanvasGradient.addEventListener("mousedown", function(event){
-                alert('mousedown at '+event.clientX+ ', ' + event.clientY);
-            });
-        }
     }
 
     function  updateData( totalOfPoints ){
@@ -46,10 +44,10 @@ var app = ( function(){
             //_totalOfPoints+=data.numberOfPoints;
             return data;
         });
-        console.log(_listOfBlueprints,'1');
     }
 
     function getBlueprints( event ){
+        _cBlueprint = '';
         readInputData( null );
     }
 
@@ -61,18 +59,18 @@ var app = ( function(){
         if (bluePrintName === null) _module.getBlueprintsByAuthor( _inputNombre, callB);
         else _module.getBlueprintsByNameAndAuthor(bluePrintName, _inputNombre, callB);
         _totalOfPoints = _listOfBlueprints.reduce( (total, {numberOfPoints}) => total + numberOfPoints, 0);
-        console.log(_listOfBlueprints,'3');
         //Lo pasamos a html
         bluePrintsHTML(_totalOfPoints);
     }
 
-    function draw( bluePrintName ){
+    function draw( bluePrintName, eventPoints = [] ){
         //Actualizamos el blueprint seleccionado
         _currentBlueprint.text(`Current blueprint: ${bluePrintName}`);
-
+        _cBlueprint = bluePrintName;
         _module.getBlueprintsByNameAndAuthor(bluePrintName, _inputNombre, (error , mockDataAuthor)=>{
             if(error) return;
-            const { points } = mockDataAuthor[0];
+            var { points } = mockDataAuthor[0];
+            points = [ ...points, ...eventPoints];
             if( _canvas.getContext ){
                 //context.clearRect(0, 0, canvas.width, canvas.height);
                 //Limpiando canvas
@@ -91,7 +89,6 @@ var app = ( function(){
         updateData(totalOfPoints);
         // Limpiamos el contenido de la tabla HTML
         _table.empty();
-        console.log(_listOfBlueprints,'2');
         _listOfBlueprints.map(bluePrint => {
             const {name, numberOfPoints } = bluePrint;
             const row = document.createElement('tr');
@@ -127,11 +124,14 @@ var app = ( function(){
             updateName(author);
             readInputData(name);
         },
-        drawBlueprint : (name) =>{
-            draw(name);
+        drawBlueprint : (name, points = []) =>{
+            draw(name, points);
         },
         setModule : (module = apimock)=>{
             _module = module;
+        },
+        getCurrentBlueprint: ()=>{
+            return _cBlueprint;
         }
     }
 })();
