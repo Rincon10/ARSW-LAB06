@@ -1,9 +1,9 @@
 var module_canvas = (( )=>{
-    //========================Var========================
+    //======================== Var ========================
     var _cBlueprint;
     var _lBlueprint;
     var _points = [];
-    //========================Elements========================
+    //======================== Elements ========================
     var _canvas = $('#canvas')[0]
     var _context = _canvas.getContext("2d");
     
@@ -62,6 +62,7 @@ var module_canvas = (( )=>{
         },
         clear : ()=>{
             _points = [];
+            _canvas.width = _canvas.width;
         },
         deletePoints : () =>{
             _points = [];

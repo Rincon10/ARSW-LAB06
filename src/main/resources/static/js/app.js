@@ -1,12 +1,14 @@
 var app = ( function(){
-    //=====================Modules========================
+    //===================== Modules ========================
     var _module = apiclient;
     var _canvas = module_canvas;
-    //========================Vars========================
+
+    //======================== Vars ========================
     var _listOfBlueprints;
     var _inputNombre;
     var _cBlueprint='';
-    //=====================DOM============================
+    
+    //===================== DOM ============================
     var _table = $('#blueprintsTable tbody');
     var _buttonBlueprints = document.getElementById('buttonBlueprints');
     var _buttonUpdatePoints = document.getElementById('buttonUpdatePoints');
@@ -17,6 +19,7 @@ var app = ( function(){
     var _currentBluePrintH2= $('#currentBluePrintH2');
     
     loadEventListeners();
+
     function loadEventListeners(){
         if( !_buttonBlueprints ) return;
     
@@ -26,6 +29,7 @@ var app = ( function(){
         /* _buttonCreateNewBlueprint.addEventListener('click', updateBluePrint); */
         _buttonUpdatePoints.addEventListener('click', updateBluePrint);
         _buttonDeleteBp.addEventListener('click', _canvas.deletePoints);
+        _buttonCreateNewBlueprint.addEventListener('click', createBlueprint);
     }
     
     function getBlueprints( ){
@@ -33,24 +37,26 @@ var app = ( function(){
         _canvas.clear();
         readInputData( null );
     }
-    
-    async function readInputData( bluePrintName , callback = callB){
+
+    // Manda la orden de obtener un blueprint, bien sea solo por autor o por nombre también
+    function readInputData( bluePrintName , callback = callB){
         //Limpiamos los datos existentes
         _listOfBlueprints=[];
-        _inputNombre = $('#inputNombre').val();
+        
         //Buscamos los blueprints segun el dato ingresado
-        if (bluePrintName === null) await _module.getBlueprintsByAuthor( _inputNombre, callback);
-        else await _module.getBlueprintsByNameAndAuthor(bluePrintName, _inputNombre, callback);
+        _inputNombre = $('#inputNombre').val();
+        if (bluePrintName === null) _module.getBlueprintsByAuthor( _inputNombre, callback);
+        else _module.getBlueprintsByNameAndAuthor(bluePrintName, _inputNombre, callback);
     }
     
+    // Transforma la información recibida del modulo en objetos de tipo data
     function callB (error , mockDataAuthor) {
         if( error !== null  ){ return;}
         _listOfBlueprints = mockDataAuthor.map( blueprint => {
             const data  = {
-                name:blueprint.name,
+                name: blueprint.name,
                 numberOfPoints: blueprint.points.length
             };
-            //_totalOfPoints+=data.numberOfPoints;
             return data;
         });
         _totalOfPoints = _listOfBlueprints.reduce( (total, {numberOfPoints}) => total + numberOfPoints, 0);
@@ -65,13 +71,13 @@ var app = ( function(){
         if( bp ){
             var { author, name, points } = bp;
             points = [...points, ..._canvas.getCurrentPoints()];
-
             // Objeto consultado por autor y nombre de plano
             bp.points = points; 
             _module.putBlueprint( name, author, JSON.stringify(bp), readInputData );
         }
     }
     
+    //Coloca la información que se tiene dentro del html
     function bluePrintsHTML(totalOfPoints){
         updateData(totalOfPoints);
         // Limpiamos el contenido de la tabla HTML
@@ -89,6 +95,7 @@ var app = ( function(){
         });
     }
 
+    // Actualiza la información a mostrar del autor selecionado
     function  updateData( totalOfPoints ){
         _totalPointsLabel.text(`Total Points: ${totalOfPoints}`);
         _bluePrintsAuthorH2.text(`${_inputNombre} blueprint's`);
@@ -115,6 +122,22 @@ var app = ( function(){
         $('#inputNombre').val(newName);
     }
 
+    function createBlueprint(){
+        _canvas.clear();
+        _inputNombre = $('#inputNombre').val();
+        if (_inputNombre === '') {
+            alert("No se puede crear un blueprint sin haber seleccionado un autor.");
+            return;
+        }
+        var bpname = prompt("Nombre del blueprint: ", "Nombre del nuevo blueprint");
+        if (bpname === '' || bpname === null){
+            alert("No se puede crear un blueprint sin nombre.");
+            return;
+        }
+        var bpnew = {author: _inputNombre, name: bpname, points: []};
+        _module.postBlueprint(bpname, _inputNombre, JSON.stringify(bpnew), readInputData);
+    }
+
     return {
         init:()=>{
             loadEventListeners();
@@ -139,6 +162,7 @@ var app = ( function(){
         },
         getCurrentBlueprint: ()=>{
             return _cBlueprint;
-        }
+        },
+        createNewBlueprint : () =>{}
     }
 })();

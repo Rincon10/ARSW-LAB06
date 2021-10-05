@@ -186,7 +186,7 @@ var apimock = (function () {
         },
         getMockaData: ()=>{
             return mockdata;
-    }
+        }
     }
 
 })();

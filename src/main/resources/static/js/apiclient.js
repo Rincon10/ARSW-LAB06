@@ -1,7 +1,6 @@
 const url = 'http://localhost:8080/blueprints/';
 var apiclient = (function () {
-    // Esto funciona dando dos click, ya que la info se guarda en temp
-    // Intentamos usar async y await pero no nos funciono
+
     return {
         getBlueprintsByAuthor:  (author, callback)=> {
             jQuery.ajax({
@@ -15,6 +14,7 @@ var apiclient = (function () {
         },
         getBlueprintsByNameAndAuthor: (name, author, callback)=> {
             jQuery.ajax({
+                type:'GET',
                 url: url+author+"/"+name,
                 success:  (result) =>{
                     callback(null,[result]);
@@ -26,6 +26,18 @@ var apiclient = (function () {
             jQuery.ajax({
                 url: url+author+"/"+name,
                 type:'PUT',
+                data: data,
+                contentType: "application/json",
+                async: true,
+                success:  () =>{
+                    callback(name);
+                }
+            });
+        },
+        postBlueprint: (name, author, data, callback) => {
+            jQuery.ajax({
+                url: url,
+                type:'POST',
                 data: data,
                 contentType: "application/json",
                 async: true,
