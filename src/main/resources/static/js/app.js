@@ -10,7 +10,7 @@ var app = ( function(){
     var _table = $('#blueprintsTable tbody');
     var _buttonBlueprints = document.getElementById('buttonBlueprints');
     var _buttonUpdatePoints = document.getElementById('buttonUpdatePoints');
-    var _buttonUpdateDelete = document.getElementById('buttonUpdateDelete');
+    var _buttonDeleteBp = document.getElementById('buttonDeleteBp');
     var _buttonCreateNewBlueprint = document.getElementById('buttonCreateNewBlueprint');
     var _totalPointsLabel = $('#totalPointsLabel');
     var _bluePrintsAuthorH2 = $('#bluePrintsAuthorH2');
@@ -23,9 +23,9 @@ var app = ( function(){
         _buttonBlueprints.addEventListener('click', getBlueprints);
         _canvas.init();
         
-        _buttonCreateNewBlueprint.addEventListener('click', updateBluePrint);
-        _buttonUpdatePoints.addEventListener('click', _canvas.updatePoints);
-        _buttonUpdateDelete.addEventListener('click', _canvas.deletePoints);
+        /* _buttonCreateNewBlueprint.addEventListener('click', updateBluePrint); */
+        _buttonUpdatePoints.addEventListener('click', updateBluePrint);
+        _buttonDeleteBp.addEventListener('click', _canvas.deletePoints);
     }
     
     function getBlueprints( ){
