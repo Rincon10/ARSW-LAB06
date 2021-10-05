@@ -30,11 +30,11 @@ var apiclient = (function () {
                 contentType: "application/json",
                 async: true,
                 success:  () =>{
-                    callback(name);
+                    callback(null);
                 }
             });
         },
-        postBlueprint: (name, author, data, callback) => {
+        postBlueprint: ( data, callback ) => {
             jQuery.ajax({
                 url: url,
                 type:'POST',
@@ -42,7 +42,19 @@ var apiclient = (function () {
                 contentType: "application/json",
                 async: true,
                 success:  () =>{
-                    callback(name);
+                    callback(null);
+                }
+            });
+        },
+        deleteBlueprint: (name, author, data, callback) => {
+            jQuery.ajax({
+                url: url+author+"/"+name,
+                type:'DELETE',
+                data: data,
+                contentType: "application/json",
+                async: true,
+                success:  () =>{
+                    callback(null);
                 }
             });
         }

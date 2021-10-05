@@ -28,7 +28,7 @@ var app = ( function(){
         
         /* _buttonCreateNewBlueprint.addEventListener('click', updateBluePrint); */
         _buttonUpdatePoints.addEventListener('click', updateBluePrint);
-        _buttonDeleteBp.addEventListener('click', _canvas.deletePoints);
+        _buttonDeleteBp.addEventListener('click', deleteBlueprint);
         _buttonCreateNewBlueprint.addEventListener('click', createBlueprint);
     }
     
@@ -77,6 +77,16 @@ var app = ( function(){
         }
     }
     
+    function callB3 (error , mockDataAuthor) {
+        if( error !== null  ){ return;}
+        _listOfBlueprints = [...mockDataAuthor];
+        const bp = _listOfBlueprints[0];
+        if( bp ){
+            var { author, name } = bp;
+            _module.deleteBlueprint( name, author, JSON.stringify(bp), readInputData );
+        }
+    }
+
     //Coloca la información que se tiene dentro del html
     function bluePrintsHTML(totalOfPoints){
         updateData(totalOfPoints);
@@ -118,6 +128,12 @@ var app = ( function(){
         readInputData( _cBlueprint, callB2);        
     }
 
+    function deleteBlueprint(){
+        if (_cBlueprint==='') return;
+        _canvas.clear();
+        readInputData( _cBlueprint, callB3);        
+    }
+
     function updateName(newName) {
         $('#inputNombre').val(newName);
     }
@@ -135,7 +151,7 @@ var app = ( function(){
             return;
         }
         var bpnew = {author: _inputNombre, name: bpname, points: []};
-        _module.postBlueprint(bpname, _inputNombre, JSON.stringify(bpnew), readInputData);
+        _module.postBlueprint( JSON.stringify(bpnew), readInputData);
     }
 
     return {
