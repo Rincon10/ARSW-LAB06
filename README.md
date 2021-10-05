@@ -77,13 +77,35 @@ Plano despues de colocar puntos con eventos y hacer peticion PUT.
 	* Se borre el canvas actual.
 	* Se solicite el nombre del nuevo 'blueprint' (usted decide la manera de hacerlo).
 	
+	Decidimos solicitar el nombre del nuevo blueprint con un prompt:
+	![](img/promptNuevoNombre.png)
+	
+	Además, identificamos dos situaciones que se pueden llegar a presentar a la hora de crear un nuevo blueprint:
+	
+	No se puede crear un blueprint sin indicar el autor al que se le va asignar:
+	![](img/Alerta01NewBlueprint.png)
+	
+	No se puede crear un blueprint sin nombre:
+	![](img/Alerta02NewBlueprint.png)
+	
 	Esta opción debe cambiar la manera como funciona la opción 'save/update', pues en este caso, al oprimirse la primera vez debe (igualmente, usando promesas):
 
 	1. Hacer POST al recurso /blueprints, para crear el nuevo plano.
 	2. Hacer GET a este mismo recurso, para actualizar el listado de planos y el puntaje del usuario.
+	
+	Creación del blueprint "Test01" a nombre del autor "author2":
+	![](img/NewBlueprint.png)
+	
+	Adición de puntos al blueprint previamente creado:
+	![](img/NewBlueprintPoints.png)
 
 5. Agregue el botón 'DELETE', de manera que (también con promesas):
 	* Borre el canvas.
 	* Haga DELETE del recurso correspondiente.
 	* Haga GET de los planos ahora disponibles.
 
+	Creación del blueprint "EsteSeVaABorrar":
+	![](img/Borrar01.png)
+	
+	Borramos el blueprint seleccionado, actualizando la tabla de resultados de blueprint del autor correspondiente:
+	![](img/Borrar02.png)
