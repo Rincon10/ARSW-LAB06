@@ -30,3 +30,7 @@ canvas  {
 .container-save_update button {
     flex-grow: 1;
 }
+
+.btn-danger {
+    background-color: rgb(78, 3, 3);
+}

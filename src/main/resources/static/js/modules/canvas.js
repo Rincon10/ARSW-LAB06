@@ -66,6 +66,9 @@ var module_canvas = (( )=>{
         deletePoints : () =>{
             _points = [];
             app.drawBlueprint( _cBlueprint);
+        },
+        getCurrentPoints: ()=>{
+            return _points;
         }
 
     }

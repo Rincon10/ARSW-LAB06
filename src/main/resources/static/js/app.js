@@ -1,6 +1,6 @@
 var app = ( function(){
     //=====================Modules========================
-    var _module = apimock;
+    var _module = apiclient;
     var _canvas = module_canvas;
     //========================Vars========================
     var _listOfBlueprints;
@@ -11,6 +11,7 @@ var app = ( function(){
     var _buttonBlueprints = document.getElementById('buttonBlueprints');
     var _buttonUpdatePoints = document.getElementById('buttonUpdatePoints');
     var _buttonUpdateDelete = document.getElementById('buttonUpdateDelete');
+    var _buttonCreateNewBlueprint = document.getElementById('buttonCreateNewBlueprint');
     var _totalPointsLabel = $('#totalPointsLabel');
     var _bluePrintsAuthorH2 = $('#bluePrintsAuthorH2');
     var _currentBluePrintH2= $('#currentBluePrintH2');
@@ -21,6 +22,8 @@ var app = ( function(){
     
         _buttonBlueprints.addEventListener('click', getBlueprints);
         _canvas.init();
+        
+        _buttonCreateNewBlueprint.addEventListener('click', updateBluePrint);
         _buttonUpdatePoints.addEventListener('click', _canvas.updatePoints);
         _buttonUpdateDelete.addEventListener('click', _canvas.deletePoints);
     }
@@ -31,13 +34,13 @@ var app = ( function(){
         readInputData( null );
     }
     
-    async function readInputData( bluePrintName ){
+    async function readInputData( bluePrintName , callback = callB){
         //Limpiamos los datos existentes
         _listOfBlueprints=[];
         _inputNombre = $('#inputNombre').val();
         //Buscamos los blueprints segun el dato ingresado
-        if (bluePrintName === null) await _module.getBlueprintsByAuthor( _inputNombre, callB);
-        else await _module.getBlueprintsByNameAndAuthor(bluePrintName, _inputNombre, callB);
+        if (bluePrintName === null) await _module.getBlueprintsByAuthor( _inputNombre, callback);
+        else await _module.getBlueprintsByNameAndAuthor(bluePrintName, _inputNombre, callback);
     }
     
     function callB (error , mockDataAuthor) {
@@ -53,6 +56,20 @@ var app = ( function(){
         _totalOfPoints = _listOfBlueprints.reduce( (total, {numberOfPoints}) => total + numberOfPoints, 0);
         //Lo pasamos a html
         bluePrintsHTML(_totalOfPoints);
+    }
+
+    function callB2 (error , mockDataAuthor) {
+        if( error !== null  ){ return;}
+        _listOfBlueprints = [...mockDataAuthor];
+        const bp = _listOfBlueprints[0];
+        if( bp ){
+            var { author, name, points } = bp;
+            points = [...points, ..._canvas.getCurrentPoints()];
+
+            // Objeto consultado por autor y nombre de plano
+            bp.points = points; 
+            _module.putBlueprint( name, author, JSON.stringify(bp), readInputData );
+        }
     }
     
     function bluePrintsHTML(totalOfPoints){
@@ -89,6 +106,11 @@ var app = ( function(){
         });
     }
 
+    function updateBluePrint() {
+        if (_cBlueprint==='') return;
+        readInputData( _cBlueprint, callB2);        
+    }
+
     function updateName(newName) {
         $('#inputNombre').val(newName);
     }
@@ -112,7 +134,7 @@ var app = ( function(){
         drawBlueprint : (name, points = []) =>{
             draw(name, points);
         },
-        setModule : (module = apimock)=>{
+        setModule : (module = apiclient)=>{
             _module = module;
         },
         getCurrentBlueprint: ()=>{

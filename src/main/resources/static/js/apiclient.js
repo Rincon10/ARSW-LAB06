@@ -21,6 +21,18 @@ var apiclient = (function () {
                 },
                 async: true
             });
+        },
+        putBlueprint: (name, author, data, callback)=> {
+            jQuery.ajax({
+                url: url+author+"/"+name,
+                type:'PUT',
+                data: data,
+                contentType: "application/json",
+                async: true,
+                success:  () =>{
+                    callback(name);
+                }
+            });
         }
     };
 })();
