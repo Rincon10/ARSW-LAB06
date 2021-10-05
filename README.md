@@ -15,9 +15,35 @@ Este laboratorio tiene como fin, actualizar en Front para que se pueda comunicar
 
 1. Agregue al canvas de la página un manejador de eventos que permita capturar los 'clicks' realizados, bien sea a través del mouse, o a través de una pantalla táctil. Para esto, tenga en cuenta [este ejemplo de uso de los eventos de tipo 'PointerEvent'](https://mobiforge.com/design-development/html5-pointer-events-api-combining-touch-mouse-and-pen) (aún no soportado por todos los navegadores) para este fin. Recuerde que a diferencia del ejemplo anterior (donde el código JS está incrustado en la vista), se espera tener la inicialización de los manejadores de eventos correctamente modularizado, tal [como se muestra en este codepen](https://codepen.io/hcadavid/pen/BwWbrw).
 
+	Para realizar los solicitado, se creo el modulo canvas y dentro de este maneja un metodo privado llamado "loadEventListeners"
+```javascript
+function loadEventListeners() {  
+	if (window.PointerEvent){
+		_canvas.addEventListener("pointerdown", ( event ) => {
+			alert('pointerdown at '+event.pageX+ ', ' + event.pageY);
+		} );
+	}else{
+		CanvasGradient.addEventListener("mousedown", function(event){
+			alert('mousedown at '+event.clientX+ ', ' + event.clientY);
+		});
+	}
+}
+```
+
+<img alt="imagen-eventos-canvas" src="https://github.com/Rincon10/ARSW-LAB06/blob/master/img/PointerAdded.png
+">
+
 2. Agregue lo que haga falta en sus módulos para que cuando se capturen nuevos puntos en el canvas abierto (si no se ha seleccionado un canvas NO se debe hacer nada):
 	1. Se agregue el punto al final de la secuencia de puntos del canvas actual (sólo en la memoria de la aplicación, AÚN NO EN EL API!).
 	2. Se repinte el dibujo.
+
+Plano antes de colocar puntos con eventos.
+<img alt="actualizacion-puntos-canvas-local-1" src="https://github.com/Rincon10/ARSW-LAB06/blob/master/img/updateCanvasLocal-1.png
+">
+
+Plano despues de colocar puntos con eventos.
+<img alt="actualizacion-puntos-canvas-local-2" src="https://github.com/Rincon10/ARSW-LAB06/blob/master/img/updateCanvasLocal-2.png
+">
 
 3. Agregue el botón Save/Update. Respetando la arquitectura de módulos actual del cliente, haga que al oprimirse el botón:
 	1. Se haga PUT al API, con el plano actualizado, en su recurso REST correspondiente.
@@ -43,6 +69,14 @@ Este laboratorio tiene como fin, actualizar en Front para que se pueda comunicar
 	JSON.stringify(objetojavascript),
 	```
 	* Como en este caso se tienen tres operaciones basadas en _callbacks_, y que las mismas requieren realizarse en un orden específico, tenga en cuenta cómo usar las promesas de JavaScript [mediante alguno de los ejemplos disponibles](http://codepen.io/hcadavid/pen/jrwdgK).
+
+Plano antes de colocar puntos con eventos.
+<img alt="actualizacion-puntos-canvas-local-1" src="https://github.com/Rincon10/ARSW-LAB06/blob/master/img/updateCanvasLocal-1.png
+">
+
+Plano despues de colocar puntos con eventos y hacer peticion PUT.
+<img alt="actualizacion-puntos-canvas-local-2" src="https://github.com/Rincon10/ARSW-LAB06/blob/master/img/updateCanvasApiRest.png
+">
 
 4. Agregue el botón 'Create new blueprint', de manera que cuando se oprima: 
 	* Se borre el canvas actual.
